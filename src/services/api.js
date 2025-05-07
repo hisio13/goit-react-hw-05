@@ -2,42 +2,41 @@ import axios from 'axios';
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = 'f66f1892c1c72d0d87a3d99d5984fa7e'; 
+export const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  params: {
+    api_key: API_KEY,
+  },
 });
 
-export const fetchTrendingMovies = () => {
-  return axiosInstance.get('/trending/movie/day', {
-    params: { api_key: API_KEY }, 
-  }).then(res => res.data.results);
+export const fetchTrendingMovies = async () => {
+  const response = await axiosInstance.get('/trending/movie/day');
+  return response.data.results;
 };
 
-export const searchMovies = query => {
-  return axiosInstance.get(`/search/movie`, {
+export const searchMovies = async (query) => {
+  const response = await axiosInstance.get('/search/movie', {
     params: {
-      api_key: API_KEY, 
-      query: query,
+      query,
       include_adult: false,
     },
-  }).then(res => res.data.results);
+  });
+  return response.data.results;
 };
 
-export const fetchMovieDetails = id => {
-  return axiosInstance.get(`/movie/${id}`, {
-    params: { api_key: API_KEY }, 
-  }).then(res => res.data);
+export const fetchMovieDetails = async (id) => {
+  const response = await axiosInstance.get(`/movie/${id}`);
+  return response.data;
 };
 
-export const fetchMovieCredits = id => {
-  return axiosInstance.get(`/movie/${id}/credits`, {
-    params: { api_key: API_KEY },
-  }).then(res => res.data.cast);
+export const fetchMovieCredits = async (id) => {
+  const response = await axiosInstance.get(`/movie/${id}/credits`);
+  return response.data;
 };
 
-export const fetchMovieReviews = id => {
-  return axiosInstance.get(`/movie/${id}/reviews`, {
-    params: { api_key: API_KEY },
-  }).then(res => res.data.results);
+export const fetchMovieReviews = async (id) => {
+  const response = await axiosInstance.get(`/movie/${id}/reviews`);
+  return response.data;
 };
-
-export const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';

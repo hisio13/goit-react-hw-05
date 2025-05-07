@@ -1,24 +1,23 @@
 import { useParams, Outlet, Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { fetchMovieDetails, IMAGE_BASE_URL } from '../../services/api';
 import css from './MovieDetailsPage.module.css';
 
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const location = useLocation();
+  const backLinkRef = useRef(location.state?.from || '/movies');
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
     fetchMovieDetails(movieId).then(setMovie);
   }, [movieId]);
 
-  const backLink = location.state?.from || '/movies';
-
   if (!movie) return null;
 
   return (
     <div className={css.container}>
-      <Link to={backLink}>Go back</Link>
+      <Link to={backLinkRef.current}>Go back</Link>
       <div className={css.details}>
         <img src={IMAGE_BASE_URL + movie.poster_path} alt={movie.title} />
         <div>
@@ -36,3 +35,4 @@ export default function MovieDetailsPage() {
     </div>
   );
 }
+
